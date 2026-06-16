@@ -1,0 +1,173 @@
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import logo from "../assets/logo_homePage.png";
+
+const Icon = ({ name, size = 24 }) => {
+  const common = {
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.8,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+  };
+
+  const icons = {
+    cart: (
+      <svg {...common}>
+        <path d="M3 4h2l2 10h11l2-6H7" />
+        <circle cx="10" cy="20" r="1.5" />
+        <circle cx="18" cy="20" r="1.5" />
+      </svg>
+    ),
+    menu: (
+      <svg {...common}>
+        <path d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    ),
+    close: (
+      <svg {...common}>
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    ),
+  };
+
+  return icons[name];
+};
+
+export default function Header({ cartCount = 0 }) {
+  const location = useLocation();
+  const [open, setOpen] = useState(false);
+
+  const navItems = [
+    ["Home", "/"],
+    ["Products", "/products"],
+    ["Services", "/services"],
+    ["About Us", "/about"],
+  ];
+
+  return (
+    <header className="sticky top-0 z-50 w-full overflow-hidden border-b border-[#3a260f] bg-[#120a04]/95 backdrop-blur-xl shadow-[0_8px_40px_rgba(0,0,0,0.55)]">
+      <div className="absolute left-0 top-0 h-[2px] w-[220px] animate-headerLine bg-gradient-to-r from-transparent via-[#ffbf3f] to-transparent" />
+
+      <div className="absolute left-[8%] top-4 h-20 w-20 animate-floatGlow rounded-full bg-[#e3a538]/20 blur-3xl" />
+      <div className="absolute right-[15%] top-8 h-24 w-24 animate-floatGlow2 rounded-full bg-[#ffbf3f]/10 blur-3xl" />
+
+      <div className="relative mx-auto flex h-[72px] w-full max-w-[1400px] items-center justify-between px-4 sm:h-[82px] sm:px-6 lg:h-[90px] lg:px-10">
+        <Link to="/" className="group relative flex shrink-0 items-center">
+          <span className="absolute inset-0 rounded-full bg-[#e3a538]/25 blur-2xl transition-all duration-700 group-hover:scale-125 group-hover:opacity-100" />
+
+          <img
+            src={logo}
+            alt="Gurutronics"
+            className="relative h-[52px] w-auto object-contain transition-all duration-700 group-hover:-translate-y-1 group-hover:scale-110 sm:h-[62px] lg:h-[72px]"
+          />
+        </Link>
+
+        <nav className="hidden animate-navDrop items-center gap-2 rounded-full border border-[#e3a538]/35 bg-gradient-to-r from-[#1a1007]/95 via-[#2a1808]/90 to-[#1a1007]/95 p-2 shadow-[0_0_35px_rgba(227,165,56,0.2)] backdrop-blur-xl lg:flex">
+          {navItems.map(([label, path]) => {
+            const isActive = location.pathname === path;
+
+            return (
+              <Link
+                key={path}
+                to={path}
+                className={`group relative overflow-hidden rounded-full px-[24px] py-[10px] text-[15px] font-semibold tracking-wide transition-all duration-500 hover:-translate-y-1 hover:scale-105 ${
+                  isActive
+                    ? "bg-gradient-to-r from-[#ffbf3f] to-[#e3a538] text-black shadow-[0_0_24px_rgba(227,165,56,0.55)]"
+                    : "text-[#f3dfb8]/80 hover:text-[#ffbf3f] hover:bg-[#3a220c]/80"
+                }`}
+              >
+                {!isActive && (
+                  <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-[#ffbf3f]/40 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                )}
+
+                <span className="relative z-10">{label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="flex items-center gap-5">
+      <Link
+  to="/cart"
+  className="group relative hidden items-center gap-4 overflow-hidden rounded-full border border-[#e3a538]/20 bg-[#120a04]/95 px-5 py-3 shadow-[0_10px_40px_rgba(0,0,0,.5)] backdrop-blur-xl transition-all duration-700 hover:scale-105 hover:border-[#e3a538]/60 lg:flex"
+>
+  {/* Glow */}
+  <span className="absolute inset-0 opacity-0 transition duration-700 group-hover:opacity-100">
+    <span className="absolute inset-0 bg-[#e3a538]/10 blur-2xl" />
+  </span>
+
+  {/* Shine */}
+  <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
+
+  {/* Icon */}
+  <div className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full bg-[#e3a538]/10 text-[#ffbf3f] transition-all duration-500 group-hover:rotate-[-10deg] group-hover:bg-[#e3a538] group-hover:text-black">
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 4h2l2.5 10h10.8l2-6H8" />
+      <circle cx="9" cy="20" r="1.5" />
+      <circle cx="18" cy="20" r="1.5" />
+    </svg>
+  </div>
+
+  {/* Text */}
+  <div className="relative z-10 flex flex-col">
+    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#dba13a]">
+      Shopping
+    </span>
+    <span className="text-sm font-bold text-[#fff2c8]">
+      Cart
+    </span>
+  </div>
+
+  {/* Counter */}
+  <div className="relative z-10 flex h-8 min-w-8 items-center justify-center rounded-full bg-gradient-to-r from-[#ffbf3f] to-[#e3a538] px-2 text-xs font-black text-black shadow-[0_0_20px_rgba(227,165,56,.7)]">
+    {cartCount}
+  </div>
+</Link>
+
+          <button
+            type="button"
+            onClick={() => setOpen(!open)}
+            className="grid h-11 w-11 place-items-center rounded-xl border border-[#5a3a18] text-[#e3a538] transition-all duration-500 hover:rotate-180 hover:bg-[#e3a538] hover:text-[#120a04] lg:hidden"
+          >
+            <Icon name={open ? "close" : "menu"} size={24} />
+          </button>
+        </div>
+      </div>
+
+      {open && (
+        <nav className="animate-mobileDrop border-t border-[#3a260f] bg-[#120a04] px-4 py-4 lg:hidden">
+          <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-2">
+            {navItems.map(([label, path], index) => (
+              <Link
+                key={path}
+                to={path}
+                onClick={() => setOpen(false)}
+                style={{ animationDelay: `${index * 90}ms` }}
+                className={`animate-mobileLink rounded-xl px-4 py-3 text-sm font-bold transition-all duration-500 hover:translate-x-3 ${
+                  location.pathname === path
+                    ? "bg-[#e3a538] text-[#120a04]"
+                    : "bg-[#1f1208] text-[#e6d6bd] hover:bg-[#e3a538] hover:text-[#120a04]"
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+        </nav>
+      )}
+    </header>
+  );
+}
