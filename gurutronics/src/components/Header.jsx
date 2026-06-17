@@ -58,7 +58,6 @@ export default function Header({ cartCount = 0 }) {
       <div className="relative mx-auto flex h-[72px] w-full max-w-[1400px] items-center justify-between px-4 sm:h-[82px] sm:px-6 lg:h-[90px] lg:px-10">
         <Link to="/" className="group relative flex shrink-0 items-center">
           <span className="absolute inset-0 rounded-full bg-[#e3a538]/25 blur-2xl transition-all duration-700 group-hover:scale-125 group-hover:opacity-100" />
-
           <img
             src={logo}
             alt="Gurutronics"
@@ -77,65 +76,36 @@ export default function Header({ cartCount = 0 }) {
                 className={`group relative overflow-hidden rounded-full px-[24px] py-[10px] text-[15px] font-semibold tracking-wide transition-all duration-500 hover:-translate-y-1 hover:scale-105 ${
                   isActive
                     ? "bg-gradient-to-r from-[#ffbf3f] to-[#e3a538] text-black shadow-[0_0_24px_rgba(227,165,56,0.55)]"
-                    : "text-[#f3dfb8]/80 hover:text-[#ffbf3f] hover:bg-[#3a220c]/80"
+                    : "text-[#f3dfb8]/80 hover:bg-[#3a220c]/80 hover:text-[#ffbf3f]"
                 }`}
               >
                 {!isActive && (
                   <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-[#ffbf3f]/40 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
                 )}
-
                 <span className="relative z-10">{label}</span>
               </Link>
             );
           })}
         </nav>
 
-        <div className="flex items-center gap-5">
-      <Link
-  to="/cart"
-  className="group relative hidden items-center gap-4 overflow-hidden rounded-full border border-[#e3a538]/20 bg-[#120a04]/95 px-5 py-3 shadow-[0_10px_40px_rgba(0,0,0,.5)] backdrop-blur-xl transition-all duration-700 hover:scale-105 hover:border-[#e3a538]/60 lg:flex"
->
-  {/* Glow */}
-  <span className="absolute inset-0 opacity-0 transition duration-700 group-hover:opacity-100">
-    <span className="absolute inset-0 bg-[#e3a538]/10 blur-2xl" />
-  </span>
+        <div className="flex items-center gap-3 sm:gap-5">
+          <Link
+            to="/cart"
+            className="group relative flex h-11 w-11 items-center justify-center rounded-xl border border-[#e3a538]/30 bg-[#120a04]/95 text-[#ffbf3f] shadow-[0_10px_30px_rgba(0,0,0,.5)] transition-all duration-500 hover:scale-105 hover:bg-[#e3a538] hover:text-black lg:h-auto lg:w-auto lg:gap-4 lg:rounded-full lg:px-5 lg:py-3"
+          >
+            <Icon name="cart" size={22} />
 
-  {/* Shine */}
-  <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
+            <div className="hidden flex-col lg:flex">
+              <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#dba13a]">
+                Shopping
+              </span>
+              <span className="text-sm font-bold text-[#fff2c8]">Cart</span>
+            </div>
 
-  {/* Icon */}
-  <div className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full bg-[#e3a538]/10 text-[#ffbf3f] transition-all duration-500 group-hover:rotate-[-10deg] group-hover:bg-[#e3a538] group-hover:text-black">
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.9"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 4h2l2.5 10h10.8l2-6H8" />
-      <circle cx="9" cy="20" r="1.5" />
-      <circle cx="18" cy="20" r="1.5" />
-    </svg>
-  </div>
-
-  {/* Text */}
-  <div className="relative z-10 flex flex-col">
-    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#dba13a]">
-      Shopping
-    </span>
-    <span className="text-sm font-bold text-[#fff2c8]">
-      Cart
-    </span>
-  </div>
-
-  {/* Counter */}
-  <div className="relative z-10 flex h-8 min-w-8 items-center justify-center rounded-full bg-gradient-to-r from-[#ffbf3f] to-[#e3a538] px-2 text-xs font-black text-black shadow-[0_0_20px_rgba(227,165,56,.7)]">
-    {cartCount}
-  </div>
-</Link>
+            <span className="absolute -right-2 -top-2 flex h-6 min-w-6 items-center justify-center rounded-full bg-gradient-to-r from-[#ffbf3f] to-[#e3a538] px-1 text-[11px] font-black text-black shadow-[0_0_18px_rgba(227,165,56,.7)] lg:static lg:h-8 lg:min-w-8 lg:px-2 lg:text-xs">
+              {cartCount}
+            </span>
+          </Link>
 
           <button
             type="button"
