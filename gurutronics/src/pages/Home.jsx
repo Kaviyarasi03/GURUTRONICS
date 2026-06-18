@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
 
@@ -44,64 +44,17 @@ const Icon = ({ name, size = 24, className = "" }) => {
         <circle cx="18" cy="20" r="1.5" />
       </svg>
     ),
-    award: (
-      <svg {...common}>
-        <circle cx="12" cy="8" r="5" />
-        <path d="m8.5 12-1.5 9 5-3 5 3-1.5-9" />
-      </svg>
-    ),
-    shield: (
-      <svg {...common}>
-        <path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z" />
-        <path d="m9 12 2 2 4-5" />
-      </svg>
-    ),
-    truck: (
-      <svg {...common}>
-        <path d="M3 7h11v9H3z" />
-        <path d="M14 10h3l4 4v2h-7" />
-        <circle cx="7" cy="19" r="2" />
-        <circle cx="17" cy="19" r="2" />
-      </svg>
-    ),
-    headset: (
-      <svg {...common}>
-        <path d="M4 13a8 8 0 0 1 16 0" />
-        <path d="M4 13v4a2 2 0 0 0 2 2h1v-7H6a2 2 0 0 0-2 1Z" />
-        <path d="M20 13v4a2 2 0 0 1-2 2h-1v-7h1a2 2 0 0 1 2 1Z" />
-      </svg>
-    ),
   };
 
-  return icons[name] || icons.award;
+  return icons[name] || icons.arrow;
 };
 
 const categories = [
-  {
-    name: "Laptop Spares",
-    image: h1,
-    link: "/products?category=Laptop%20Spares#products-section",
-  },
-  {
-    name: "Computer Parts",
-    image: h2,
-    link: "/products?category=Computer%20Parts#products-section",
-  },
-  {
-    name: "Gaming Zone",
-    image: h3,
-    link: "/products?category=Gaming%20Zone#products-section",
-  },
-  {
-    name: "CCTV Cameras",
-    image: h4,
-    link: "/products?category=CCTV%20Cameras#products-section",
-  },
-  {
-    name: "Solar Panels",
-    image: h5,
-    link: "/products?category=Solar%20Panels#products-section",
-  },
+  { name: "Laptop Spares", image: h1, link: "/products?category=Laptop%20Spares#products-section" },
+  { name: "Computer Parts", image: h2, link: "/products?category=Computer%20Parts#products-section" },
+  { name: "Gaming Zone", image: h3, link: "/products?category=Gaming%20Zone#products-section" },
+  { name: "CCTV Cameras", image: h4, link: "/products?category=CCTV%20Cameras#products-section" },
+  { name: "Solar Panels", image: h5, link: "/products?category=Solar%20Panels#products-section" },
 ];
 
 const prebuildPCs = [
@@ -110,8 +63,7 @@ const prebuildPCs = [
     title: "Gaming PC",
     use: "gaming",
     price: "₹82,990",
-    image:
-      "https://images.unsplash.com/photo-1587202372616-b43abea06c2a?q=80&w=900&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1587202372616-b43abea06c2a?q=80&w=900&auto=format&fit=crop",
     link: "/prebuild?type=gaming",
   },
   {
@@ -119,8 +71,7 @@ const prebuildPCs = [
     title: "Editing PC",
     use: "editing",
     price: "₹96,500",
-    image:
-      "https://images.unsplash.com/photo-1593640495253-23196b27a87f?q=80&w=900&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1593640495253-23196b27a87f?q=80&w=900&auto=format&fit=crop",
     link: "/prebuild?type=editing",
   },
   {
@@ -128,8 +79,7 @@ const prebuildPCs = [
     title: "Study PC",
     use: "studies",
     price: "₹39,990",
-    image:
-      "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=900&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=900&auto=format&fit=crop",
     link: "/prebuild?type=studies",
   },
   {
@@ -137,8 +87,7 @@ const prebuildPCs = [
     title: "Office PC",
     use: "office",
     price: "₹45,990",
-    image:
-      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=900&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=900&auto=format&fit=crop",
     link: "/prebuild?type=office",
   },
 ];
@@ -149,40 +98,35 @@ const products = [
     name: "Corsair 16GB DDR4 3200MHz Desktop RAM",
     price: "₹4,299",
     numericPrice: 4299,
-    image:
-      "https://images.unsplash.com/photo-1562976540-1502c2145186?q=80&w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1562976540-1502c2145186?q=80&w=800&auto=format&fit=crop",
   },
   {
     id: 2,
     name: "MSI B550M PRO-VDH WiFi Motherboard",
     price: "₹8,699",
     numericPrice: 8699,
-    image:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop",
   },
   {
     id: 3,
     name: "WD Blue 1TB NVMe SSD",
     price: "₹6,799",
     numericPrice: 6799,
-    image:
-      "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?q=80&w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?q=80&w=800&auto=format&fit=crop",
   },
   {
     id: 4,
     name: "ZOTAC RTX 3060 Twin Edge Graphics Card",
     price: "₹28,999",
     numericPrice: 28999,
-    image:
-      "https://images.unsplash.com/photo-1591488320449-011701bb6704?q=80&w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1591488320449-011701bb6704?q=80&w=800&auto=format&fit=crop",
   },
   {
     id: 5,
     name: "Intel Core i5 12400F Processor",
     price: "₹13,999",
     numericPrice: 13999,
-    image:
-      "https://images.unsplash.com/photo-1617096200347-cb04ae810b1d?q=80&w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1617096200347-cb04ae810b1d?q=80&w=800&auto=format&fit=crop",
   },
 ];
 
@@ -235,193 +179,136 @@ export default function Home() {
   );
 }
 
-
-
 function Hero() {
-  const cards = [
-    "Laptop Spares",
-    "Gaming Gear",
-    "CCTV",
-    "Solar",
-    "Computer Parts",
-    "Repair Service",
-  ];
-
-  /*
-    Performance note:
-    Mobile/tablet lag usually happens because many animate-ping / blur / spin
-    elements render at the same time. This version keeps the premium animation
-    look, but uses fewer DOM nodes and disables heavy particles on small screens.
-  */
-  const desktopParticles = Array.from({ length: 42 });
-  const desktopLines = Array.from({ length: 16 });
-  const orbitDots = Array.from({ length: 14 });
+  const cards = ["Laptop Spares", "Gaming Gear", "CCTV", "Solar", "Computer Parts", "Repair Service"];
 
   return (
-    <section className="relative min-h-[100svh] overflow-hidden bg-black">
-      <style>{`
-        @keyframes softFloat {
-          0%, 100% { transform: translate3d(0,0,0) scale(1); opacity: .55; }
-          50% { transform: translate3d(0,-14px,0) scale(1.04); opacity: .85; }
-        }
-
-        @keyframes slowSpin {
-          from { transform: translate3d(-50%,-50%,0) rotate(0deg); }
-          to { transform: translate3d(-50%,-50%,0) rotate(360deg); }
-        }
-
-        @keyframes shimmerMove {
-          0% { transform: translateX(-120%); }
-          100% { transform: translateX(120%); }
-        }
-
-        @keyframes cardFloat {
-          0%, 100% { transform: translate3d(0,0,0); }
-          50% { transform: translate3d(0,-12px,0); }
-        }
-
-        .gpu-safe {
-          transform: translateZ(0);
-          backface-visibility: hidden;
-          will-change: transform, opacity;
-        }
-
-        @media (max-width: 1023px) {
-          .desktop-heavy {
-            display: none !important;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .gpu-safe,
-          .motion-safe-custom {
-            animation: none !important;
-            transition: none !important;
-          }
-        }
-      `}</style>
-
-      {/* Background image */}
+    <section className="relative min-h-screen overflow-hidden bg-black">
       <div className="absolute inset-0 z-0">
-        <img
-          src={heroBg}
-          alt="Hero Background"
-          className="h-full w-full object-cover object-center"
-          loading="eager"
-          decoding="async"
-        />
-        <div className="absolute inset-0 bg-black/35" />
+        <img src={heroBg} alt="Hero Background" className="h-full w-full object-cover object-center" />
+        <div className="absolute inset-0 bg-black/25" />
       </div>
 
-      {/* Light animated gradient - cheap animation */}
-      <div className="gpu-safe absolute inset-0 z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,190,70,0.16),transparent_26%),radial-gradient(circle_at_80%_30%,rgba(255,150,0,0.13),transparent_28%),linear-gradient(to_bottom,rgba(0,0,0,.18),rgba(18,7,2,.22),rgba(0,0,0,.40))] motion-safe:animate-[softFloat_9s_ease-in-out_infinite]" />
+      <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,190,70,0.18),transparent_25%),radial-gradient(circle_at_80%_30%,rgba(255,150,0,0.16),transparent_25%),radial-gradient(circle_at_50%_80%,rgba(255,220,150,0.08),transparent_30%),linear-gradient(to_bottom,rgba(0,0,0,.20),rgba(18,7,2,.20),rgba(0,0,0,.35))] animate-[pulse_14s_ease-in-out_infinite]" />
 
-      {/* Mobile/tablet safe glow layers */}
-      <div className="gpu-safe absolute left-[-90px] top-[18%] z-10 h-56 w-56 rounded-full bg-[#f5c363]/20 blur-[80px] motion-safe:animate-[softFloat_7s_ease-in-out_infinite] sm:h-72 sm:w-72" />
-      <div className="gpu-safe absolute bottom-[12%] right-[-110px] z-10 h-60 w-60 rounded-full bg-[#c98218]/20 blur-[90px] motion-safe:animate-[softFloat_8s_ease-in-out_infinite] sm:h-80 sm:w-80" />
-
-      {/* Desktop-only premium particles/lines */}
-      <div className="desktop-heavy absolute inset-0 z-10 overflow-hidden opacity-80">
-        {desktopLines.map((_, i) => (
-          <span
-            key={`line-${i}`}
-            className="gpu-safe absolute h-[2px] w-44 rotate-[-35deg] rounded-full bg-gradient-to-r from-transparent via-[#f5c363] to-transparent"
-            style={{
-              left: `${(i * 13) % 100}%`,
-              top: `${(i * 19) % 100}%`,
-              opacity: 0.22,
-              animation: `softFloat ${4 + (i % 4)}s ease-in-out infinite`,
-              animationDelay: `${i * 0.15}s`,
-            }}
-          />
-        ))}
-
-        {desktopParticles.map((_, i) => (
-          <span
-            key={`particle-${i}`}
-            className="gpu-safe absolute rounded-full bg-[#f5c363] shadow-[0_0_16px_#f5c363]"
-            style={{
-              left: `${(i * 37) % 100}%`,
-              top: `${(i * 23) % 100}%`,
-              width: `${(i % 3) + 2}px`,
-              height: `${(i % 3) + 2}px`,
-              opacity: 0.2,
-              animation: `softFloat ${3 + (i % 5)}s ease-in-out infinite`,
-              animationDelay: `${i * 0.08}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Desktop-only center orbit */}
-      <div className="desktop-heavy">
-        <div className="gpu-safe absolute left-1/2 top-[48%] z-10 h-[760px] w-[760px] rounded-full border border-[#f5c363]/10 motion-safe:animate-[slowSpin_90s_linear_infinite]" />
-        <div className="gpu-safe absolute left-1/2 top-[48%] z-10 h-[560px] w-[560px] rounded-full border border-[#f5c363]/15 motion-safe:animate-[slowSpin_60s_linear_infinite_reverse]" />
-        <div className="gpu-safe absolute left-1/2 top-[48%] z-10 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f5c363]/16 blur-[110px] motion-safe:animate-[softFloat_6s_ease-in-out_infinite]" />
-
-        {orbitDots.map((_, i) => (
+      <div className="absolute inset-0 z-10 overflow-hidden opacity-[0.16]">
+        {[...Array(6)].map((_, i) => (
           <div
-            key={`orbit-${i}`}
-            className="gpu-safe absolute left-1/2 top-[48%] z-10 h-2.5 w-2.5 rounded-full bg-[#f5c363] shadow-[0_0_20px_#f5c363]"
+            key={`wave-sheet-${i}`}
+            className="absolute left-[-20%] h-[180px] w-[140%] rounded-[50%] border-t border-[#f5c363]/20 blur-[1px]"
             style={{
-              transform: `rotate(${i * 30}deg) translateX(${280 + (i % 3) * 36}px)`,
-              transformOrigin: "0 0",
-              opacity: 0.55,
-              animation: `softFloat ${5 + (i % 4)}s ease-in-out infinite`,
+              top: `${-5 + i * 15}%`,
+              transform: `rotate(${i % 2 === 0 ? "-6deg" : "6deg"})`,
+              animation: `pulse ${12 + i * 2}s ease-in-out infinite`,
+            }}
+          />
+        ))}
+
+        {[...Array(4)].map((_, i) => (
+          <div
+            key={`gold-wave-${i}`}
+            className="absolute left-[-10%] h-[260px] w-[120%] rounded-[50%] border-b border-[#f5c363]/30 shadow-[0_0_35px_rgba(245,195,99,0.18)]"
+            style={{
+              top: `${8 + i * 18}%`,
+              transform: `rotate(${i % 2 === 0 ? "3deg" : "-3deg"})`,
+              animation: `spin ${90 + i * 15}s linear infinite`,
+            }}
+          />
+        ))}
+
+        {[...Array(18)].map((_, i) => (
+          <span
+            key={`wave-dot-${i}`}
+            className="absolute rounded-full bg-[#f5c363] shadow-[0_0_18px_#f5c363] animate-ping"
+            style={{
+              left: `${(i * 23) % 100}%`,
+              top: `${18 + ((i * 11) % 65)}%`,
+              width: `${(i % 4) + 2}px`,
+              height: `${(i % 4) + 2}px`,
+              opacity: 0.16,
+              animationDuration: `${10 + (i % 6)}s`,
             }}
           />
         ))}
       </div>
+
+      {[...Array(16)].map((_, i) => (
+        <div
+          key={`streak-${i}`}
+          className="absolute z-10 h-[2px] w-44 rotate-[-35deg] rounded-full bg-gradient-to-r from-transparent via-[#f5c363] to-transparent animate-pulse"
+          style={{
+            left: `${(i * 13) % 100}%`,
+            top: `${(i * 17) % 100}%`,
+            opacity: 0.28,
+            animationDuration: `${8 + (i % 5)}s`,
+          }}
+        />
+      ))}
+
+      {[...Array(45)].map((_, i) => (
+        <span
+          key={`hero-dot-${i}`}
+          className="absolute z-10 rounded-full bg-[#f5c363] shadow-[0_0_20px_#f5c363] animate-ping"
+          style={{
+            left: `${(i * 37) % 100}%`,
+            top: `${(i * 23) % 100}%`,
+            width: `${(i % 4) + 2}px`,
+            height: `${(i % 4) + 2}px`,
+            animationDuration: `${9 + (i % 8)}s`,
+            animationDelay: `${i * 0.08}s`,
+            opacity: 0.12,
+          }}
+        />
+      ))}
+
+      <div className="absolute left-1/2 top-[48%] z-10 h-[900px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#f5c363]/10 animate-[spin_180s_linear_infinite]" />
+      <div className="absolute left-1/2 top-[48%] z-10 h-[720px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#f5c363]/15 animate-[spin_140s_linear_infinite_reverse]" />
+      <div className="absolute left-1/2 top-[48%] z-10 h-[540px] w-[540px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#f5c363]/20 animate-[spin_100s_linear_infinite]" />
+      <div className="absolute left-1/2 top-[48%] z-10 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f5c363]/18 blur-[120px] animate-[pulse_12s_ease-in-out_infinite]" />
+
+      {[...Array(14)].map((_, i) => (
+        <div
+          key={`orbit-${i}`}
+          className="absolute left-1/2 top-[48%] z-10 h-3 w-3 rounded-full bg-[#f5c363] shadow-[0_0_25px_#f5c363]"
+          style={{
+            transform: `rotate(${i * 25.7}deg) translateX(${300 + (i % 3) * 45}px)`,
+            transformOrigin: "0 0",
+            animation: `spin ${35 + (i % 7) * 5}s linear infinite`,
+            opacity: 0.65,
+          }}
+        />
+      ))}
 
       {cards.map((text, i) => (
         <div
           key={text}
-          className="desktop-heavy gpu-safe absolute z-30 rounded-3xl border border-[#f5c363]/30 bg-black/35 px-6 py-4 text-sm font-black text-[#f5c363] shadow-[0_0_32px_rgba(245,195,99,.20)] backdrop-blur-xl"
+          className="absolute z-30 hidden rounded-3xl border border-[#f5c363]/30 bg-black/35 px-6 py-4 text-sm font-black text-[#f5c363] shadow-[0_0_40px_rgba(245,195,99,.22)] backdrop-blur-xl lg:block"
           style={{
-            left:
-              i === 0
-                ? "8%"
-                : i === 1
-                ? "72%"
-                : i === 2
-                ? "10%"
-                : i === 3
-                ? "76%"
-                : i === 4
-                ? "18%"
-                : "68%",
-            top:
-              i === 0
-                ? "22%"
-                : i === 1
-                ? "20%"
-                : i === 2
-                ? "60%"
-                : i === 3
-                ? "62%"
-                : i === 4
-                ? "78%"
-                : "78%",
-            animation: `cardFloat ${5 + i}s ease-in-out infinite`,
-            animationDelay: `${i * 0.2}s`,
+            left: i === 0 ? "8%" : i === 1 ? "72%" : i === 2 ? "10%" : i === 3 ? "76%" : i === 4 ? "18%" : "68%",
+            top: i === 0 ? "22%" : i === 1 ? "20%" : i === 2 ? "60%" : i === 3 ? "62%" : i === 4 ? "78%" : "78%",
+            animation: `bounce ${12 + i * 2}s ease-in-out infinite`,
+            animationDelay: `${i * 0.3}s`,
           }}
         >
           {text}
         </div>
       ))}
 
-      <div className="absolute left-0 top-0 z-20 h-1 w-full bg-gradient-to-r from-transparent via-[#f5c363] to-transparent opacity-50" />
-      <div className="absolute left-0 top-0 z-20 hidden h-full w-1 bg-gradient-to-b from-transparent via-[#f5c363] to-transparent opacity-35 sm:block" />
-      <div className="absolute right-0 top-0 z-20 hidden h-full w-1 bg-gradient-to-b from-transparent via-[#f5c363] to-transparent opacity-35 sm:block" />
+      <div className="absolute left-1/2 top-[48%] z-10 h-[450px] w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#f5c363]/20 animate-[ping_8s_cubic-bezier(0,0,0.2,1)_infinite]" />
+      <div className="absolute left-1/2 top-[48%] z-10 h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#f5c363]/10 animate-[ping_10s_cubic-bezier(0,0,0.2,1)_infinite]" />
 
-      <div className="relative z-50 flex min-h-[100svh] flex-col items-center justify-center px-4 py-24 text-center sm:px-6">
-        <div className="gpu-safe mb-6 rounded-full border border-[#f5c363]/40 bg-black/40 px-5 py-3 text-[10px] font-black tracking-[0.28em] text-[#f5c363] shadow-[0_0_28px_rgba(245,195,99,0.22)] backdrop-blur-xl motion-safe:animate-[softFloat_5s_ease-in-out_infinite] sm:px-7 sm:text-xs sm:tracking-[0.4em]">
+      <div className="absolute left-0 top-0 z-20 h-1 w-full bg-gradient-to-r from-transparent via-[#f5c363] to-transparent opacity-60 animate-[bounce_8s_ease-in-out_infinite]" />
+      <div className="absolute left-0 top-0 z-20 h-full w-1 bg-gradient-to-b from-transparent via-[#f5c363] to-transparent opacity-40 animate-[pulse_10s_ease-in-out_infinite]" />
+      <div className="absolute right-0 top-0 z-20 h-full w-1 bg-gradient-to-b from-transparent via-[#f5c363] to-transparent opacity-40 animate-[pulse_10s_ease-in-out_infinite]" />
+
+      <div className="relative z-50 flex min-h-screen flex-col items-center justify-center px-6 text-center">
+        <div className="mb-7 rounded-full border border-[#f5c363]/40 bg-black/40 px-7 py-3 text-xs font-black tracking-[0.4em] text-[#f5c363] shadow-[0_0_35px_rgba(245,195,99,0.25)] backdrop-blur-xl animate-[pulse_10s_ease-in-out_infinite]">
           PREMIUM TECH WORLD
         </div>
 
         <div className="relative max-w-[950px]">
           <h1
-            className="text-[38px] leading-[1.05] sm:text-[58px] lg:text-[84px]"
+            className="block text-[36px] leading-[1] sm:text-[58px] lg:text-[84px]"
             style={{
               fontFamily: "'Playfair Display', serif",
               fontWeight: "800",
@@ -434,32 +321,32 @@ function Hero() {
             <span className="italic text-[#dba13a]">in One Place</span>
           </h1>
 
-          <p className="mt-5 text-base font-bold leading-7 text-[#ffe3a3] sm:text-2xl sm:leading-9">
+          <p className="mt-5 text-xl font-bold leading-9 text-[#ffe3a3] sm:text-2xl">
             Laptop Spares • Gaming Gear • CCTV Solutions
           </p>
 
-          <p className="mx-auto mt-3 max-w-[850px] text-sm leading-7 text-[#eadbc3] sm:text-lg sm:leading-8">
+          <p className="mt-3 max-w-[850px] text-base leading-8 text-[#eadbc3] sm:text-lg">
             Your one-stop destination for quality computer parts, solar products,
             repair services, and reliable tech support.
           </p>
 
-          <div className="mx-auto mt-6 h-[3px] w-[72%] overflow-hidden rounded-full bg-[#f5c363]/10">
-            <div className="h-full w-24 bg-gradient-to-r from-transparent via-[#f5c363] to-transparent motion-safe:animate-[shimmerMove_2.6s_ease-in-out_infinite]" />
+          <div className="mx-auto mt-5 h-[3px] w-[70%] overflow-hidden rounded-full bg-[#f5c363]/10">
+            <div className="h-full w-24 bg-gradient-to-r from-transparent via-[#f5c363] to-transparent animate-[bounce_6s_ease-in-out_infinite]" />
           </div>
         </div>
 
-        <div className="relative z-50 mt-9 flex w-full max-w-[420px] flex-col gap-4 sm:w-auto sm:max-w-none sm:flex-row sm:gap-5">
+        <div className="relative z-50 mt-10 flex flex-col gap-5 sm:flex-row">
           <Link
             to="/products"
-            className="group relative overflow-hidden rounded-2xl bg-[#f5c363] px-10 py-4 font-black text-black shadow-[0_0_30px_rgba(245,195,99,0.38)] transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.03]"
+            className="group relative overflow-hidden rounded-2xl bg-[#f5c363] px-10 py-4 font-black text-black shadow-[0_0_35px_rgba(245,195,99,0.45)] transition-all duration-500 hover:scale-110 hover:-translate-y-2"
           >
-            <span className="absolute inset-0 -translate-x-full bg-white/70 transition-transform duration-700 group-hover:translate-x-full" />
+            <span className="absolute inset-0 -translate-x-full bg-white/70 transition-transform duration-1000 group-hover:translate-x-full" />
             <span className="relative">Shop Now</span>
           </Link>
 
           <Link
             to="/services"
-            className="rounded-2xl border border-[#f5c363] bg-black/30 px-10 py-4 font-black text-[#f5c363] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:bg-[#f5c363] hover:text-black"
+            className="rounded-2xl border border-[#f5c363] bg-black/30 px-10 py-4 font-black text-[#f5c363] backdrop-blur-xl transition-all duration-500 hover:bg-[#f5c363] hover:text-black hover:scale-110 hover:-translate-y-2"
           >
             Services
           </Link>
@@ -472,15 +359,12 @@ function Hero() {
 function CategoryStrip() {
   return (
     <section className="relative z-10 overflow-hidden bg-[#120a04] px-4 py-12 sm:px-6 sm:py-14 lg:px-10">
-      {/* Background glow */}
       <div className="absolute left-[-120px] top-[-100px] h-80 w-80 rounded-full bg-[#dba13a]/20 blur-[120px]" />
       <div className="absolute bottom-[-120px] right-[-120px] h-96 w-96 rounded-full bg-[#c98218]/20 blur-[140px]" />
 
       <div
         className="relative mx-auto grid w-full max-w-[1400px] gap-5 rounded-[32px] border border-[#ead8bc]/40 bg-white/90 p-4 shadow-[0_40px_120px_rgba(0,0,0,.18)] backdrop-blur-2xl sm:rounded-[40px] sm:p-6 md:p-8 xl:p-10"
-        style={{
-          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-        }}
+        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}
       >
         {categories.map((cat, index) => (
           <Link
@@ -502,7 +386,6 @@ function CategoryStrip() {
               }}
             >
               <div className="absolute inset-[-8px] rounded-full border border-[#c98218]/20" />
-
               <img
                 src={cat.image}
                 alt={cat.name}
@@ -514,12 +397,7 @@ function CategoryStrip() {
               />
             </div>
 
-            <h3
-              className="relative mt-6 text-center font-serif font-bold text-[#3b2610] transition duration-700 group-hover:text-[#b56b17]"
-              style={{
-                fontSize: "clamp(15px, 1.3vw, 18px)",
-              }}
-            >
+            <h3 className="relative mt-6 text-center font-serif font-bold text-[#3b2610] transition duration-700 group-hover:text-[#b56b17]">
               {cat.name}
             </h3>
 
@@ -530,6 +408,7 @@ function CategoryStrip() {
     </section>
   );
 }
+
 function PrebuildPCSection() {
   const [current, setCurrent] = useState(0);
 
@@ -540,10 +419,10 @@ function PrebuildPCSection() {
     "from-[#4a2b05] via-[#a16207] to-[#fbbf24]",
   ];
 
-  React.useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev === prebuildPCs.length - 1 ? 0 : prev + 1));
-    }, 2200);
+    }, 4200);
 
     return () => clearInterval(interval);
   }, []);
@@ -558,20 +437,20 @@ function PrebuildPCSection() {
 
   return (
     <section className="relative overflow-hidden bg-[#fffaf3] px-4 py-14 sm:px-6 lg:px-10">
-      <div className="absolute left-[-100px] top-20 h-80 w-80 rounded-full bg-[#dba13a]/20 blur-[120px] animate-pulse" />
-      <div className="absolute right-[-120px] bottom-10 h-96 w-96 rounded-full bg-[#c98218]/15 blur-[130px] animate-[spin_40s_linear_infinite]" />
+      <div className="absolute left-[-100px] top-20 h-80 w-80 rounded-full bg-[#dba13a]/20 blur-[120px] animate-[pulse_12s_ease-in-out_infinite]" />
+      <div className="absolute right-[-120px] bottom-10 h-96 w-96 rounded-full bg-[#c98218]/15 blur-[130px] animate-[spin_90s_linear_infinite]" />
 
       {[...Array(14)].map((_, i) => (
         <span
-          key={i}
+          key={`pc-particle-${i}`}
           className="absolute rounded-full bg-[#c78925] shadow-[0_0_18px_rgba(199,137,37,0.8)] animate-ping"
           style={{
             left: `${(i * 29) % 100}%`,
             top: `${(i * 43) % 100}%`,
             width: `${(i % 4) + 2}px`,
             height: `${(i % 4) + 2}px`,
-            opacity: 0.18,
-            animationDuration: `${2 + (i % 5)}s`,
+            opacity: 0.16,
+            animationDuration: `${10 + (i % 5)}s`,
           }}
         />
       ))}
@@ -582,19 +461,18 @@ function PrebuildPCSection() {
             Prebuilt PCs
           </h2>
           <div className="h-px flex-1 bg-[#d8bd8c]" />
-          <span className="text-[#c78925] animate-spin">✦</span>
+          <span className="text-[#c78925] animate-[spin_12s_linear_infinite]">✦</span>
         </div>
 
         <div
           className={`group relative overflow-hidden rounded-[42px] bg-gradient-to-r ${bgColors[current]} p-8 shadow-[0_35px_100px_rgba(0,0,0,0.35)] transition-all duration-1000 hover:scale-[1.01]`}
         >
-          <div className="absolute inset-0 opacity-[0.13] bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-[size:60px_60px] animate-pulse" />
+          <div className="absolute inset-0 opacity-[0.13] bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-[size:60px_60px] animate-[pulse_12s_ease-in-out_infinite]" />
 
-          <div className="absolute right-[-120px] top-[-120px] h-[330px] w-[330px] animate-pulse rounded-full bg-white/25 blur-[100px]" />
-          <div className="absolute left-[-120px] bottom-[-120px] h-[300px] w-[300px] animate-[spin_35s_linear_infinite] rounded-full bg-white/15 blur-[90px]" />
+          <div className="absolute right-[-120px] top-[-120px] h-[330px] w-[330px] animate-[pulse_12s_ease-in-out_infinite] rounded-full bg-white/25 blur-[100px]" />
+          <div className="absolute left-[-120px] bottom-[-120px] h-[300px] w-[300px] animate-[spin_90s_linear_infinite] rounded-full bg-white/15 blur-[90px]" />
 
-          {/* moving light streaks */}
-          {[...Array(12)].map((_, i) => (
+          {[...Array(8)].map((_, i) => (
             <span
               key={`line-${i}`}
               className="absolute h-[2px] w-32 rounded-full bg-gradient-to-r from-transparent via-white/70 to-transparent animate-pulse"
@@ -602,13 +480,12 @@ function PrebuildPCSection() {
                 left: `${(i * 17) % 100}%`,
                 top: `${(i * 23) % 100}%`,
                 transform: `rotate(${i * 22}deg)`,
-                opacity: 0.35,
-                animationDuration: `${2 + (i % 4)}s`,
+                opacity: 0.3,
+                animationDuration: `${8 + (i % 4)}s`,
               }}
             />
           ))}
 
-          {/* floating dots inside card */}
           {[...Array(10)].map((_, i) => (
             <span
               key={`dot-${i}`}
@@ -618,9 +495,9 @@ function PrebuildPCSection() {
                 top: `${(i * 47) % 100}%`,
                 width: `${(i % 4) + 2}px`,
                 height: `${(i % 4) + 2}px`,
-                opacity: 0.25,
-                animationDuration: `${3 + (i % 6)}s`,
-                animationDelay: `${i * 0.08}s`,
+                opacity: 0.23,
+                animationDuration: `${10 + (i % 6)}s`,
+                animationDelay: `${i * 0.12}s`,
               }}
             />
           ))}
@@ -656,11 +533,11 @@ function PrebuildPCSection() {
             className="relative z-10 flex min-h-[420px] flex-col items-center justify-between gap-8 pt-16 lg:flex-row"
           >
             <div className="w-full text-center lg:w-[45%] lg:pl-16 lg:text-left">
-              <p className="text-lg font-semibold text-white/75 animate-pulse">
+              <p className="text-lg font-semibold text-white/75 animate-[pulse_10s_ease-in-out_infinite]">
                 Just {prebuildPCs[current].price}
               </p>
 
-              <h3 className="mt-3 text-5xl font-black text-white drop-shadow-[0_0_25px_rgba(0,0,0,0.45)] sm:text-6xl transition-all duration-700 group-hover:translate-x-2">
+              <h3 className="mt-3 text-5xl font-black text-white drop-shadow-[0_0_25px_rgba(0,0,0,0.45)] transition-all duration-700 group-hover:translate-x-2 sm:text-6xl">
                 {prebuildPCs[current].title}
               </h3>
 
@@ -670,9 +547,9 @@ function PrebuildPCSection() {
             </div>
 
             <div className="relative flex w-full justify-center lg:w-[55%]">
-              <div className="absolute inset-0 m-auto h-[300px] w-[300px] animate-pulse rounded-full bg-white/25 blur-[85px]" />
-              <div className="absolute inset-0 m-auto h-[360px] w-[360px] rounded-full border border-white/25 animate-[spin_22s_linear_infinite]" />
-              <div className="absolute inset-0 m-auto h-[440px] w-[440px] rounded-full border border-white/15 animate-[spin_35s_linear_infinite_reverse]" />
+              <div className="absolute inset-0 m-auto h-[300px] w-[300px] animate-[pulse_12s_ease-in-out_infinite] rounded-full bg-white/25 blur-[85px]" />
+              <div className="absolute inset-0 m-auto h-[360px] w-[360px] rounded-full border border-white/25 animate-[spin_70s_linear_infinite]" />
+              <div className="absolute inset-0 m-auto h-[440px] w-[440px] rounded-full border border-white/15 animate-[spin_100s_linear_infinite_reverse]" />
 
               <img
                 src={prebuildPCs[current].image}
@@ -734,11 +611,7 @@ function FeaturedProducts({ onAddToCart }) {
             className="group flex w-fit items-center gap-3 rounded-full border border-[#c59354]/40 bg-white px-6 py-3 text-sm font-black text-[#6b4014] shadow-sm transition duration-500 hover:-translate-y-1 hover:bg-[#c59354] hover:text-white"
           >
             View All Products
-            <Icon
-              name="arrow"
-              size={18}
-              className="transition duration-500 group-hover:translate-x-2"
-            />
+            <Icon name="arrow" size={18} className="transition duration-500 group-hover:translate-x-2" />
           </Link>
         </div>
 
@@ -763,8 +636,6 @@ function FeaturedProducts({ onAddToCart }) {
                   alt={p.name}
                   className="h-[210px] w-full object-cover transition duration-700 group-hover:scale-110"
                 />
-
-              
               </div>
 
               <div className="relative pt-5">
@@ -773,9 +644,7 @@ function FeaturedProducts({ onAddToCart }) {
                 </h3>
 
                 <div className="mt-4 flex items-center justify-between">
-                  <p className="text-xl font-black text-[#8f5c22]">
-                    {p.price}
-                  </p>
+                  <p className="text-xl font-black text-[#8f5c22]">{p.price}</p>
 
                   <span className="rounded-full bg-[#fff1d8] px-3 py-1 text-[10px] font-black uppercase tracking-[2px] text-[#9b681f]">
                     In Stock
