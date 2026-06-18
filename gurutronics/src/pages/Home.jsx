@@ -201,12 +201,8 @@ const trust = [
 ];
 
 const getCartCount = () => {
-  try {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    return cart.reduce((total, item) => total + item.qty, 0);
-  } catch {
-    return 0;
-  }
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  return cart.reduce((total, item) => total + item.qty, 0);
 };
 
 export default function Home() {
@@ -242,35 +238,172 @@ export default function Home() {
 
 
 function Hero() {
-  const cards = ["Laptop Spares", "Gaming Gear", "CCTV", "Solar"];
+  const cards = [
+    "Laptop Spares",
+    "Gaming Gear",
+    "CCTV",
+    "Solar",
+    "Computer Parts",
+    "Repair Service",
+  ];
+
+  /*
+    Performance note:
+    Mobile/tablet lag usually happens because many animate-ping / blur / spin
+    elements render at the same time. This version keeps the premium animation
+    look, but uses fewer DOM nodes and disables heavy particles on small screens.
+  */
+  const desktopParticles = Array.from({ length: 42 });
+  const desktopLines = Array.from({ length: 16 });
+  const orbitDots = Array.from({ length: 14 });
 
   return (
-    <section className="relative min-h-[86vh] overflow-hidden bg-black sm:min-h-screen">
+    <section className="relative min-h-[100svh] overflow-hidden bg-black">
+      <style>{`
+        @keyframes softFloat {
+          0%, 100% { transform: translate3d(0,0,0) scale(1); opacity: .55; }
+          50% { transform: translate3d(0,-14px,0) scale(1.04); opacity: .85; }
+        }
+
+        @keyframes slowSpin {
+          from { transform: translate3d(-50%,-50%,0) rotate(0deg); }
+          to { transform: translate3d(-50%,-50%,0) rotate(360deg); }
+        }
+
+        @keyframes shimmerMove {
+          0% { transform: translateX(-120%); }
+          100% { transform: translateX(120%); }
+        }
+
+        @keyframes cardFloat {
+          0%, 100% { transform: translate3d(0,0,0); }
+          50% { transform: translate3d(0,-12px,0); }
+        }
+
+        .gpu-safe {
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          will-change: transform, opacity;
+        }
+
+        @media (max-width: 1023px) {
+          .desktop-heavy {
+            display: none !important;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .gpu-safe,
+          .motion-safe-custom {
+            animation: none !important;
+            transition: none !important;
+          }
+        }
+      `}</style>
+
+      {/* Background image */}
       <div className="absolute inset-0 z-0">
         <img
           src={heroBg}
           alt="Hero Background"
           className="h-full w-full object-cover object-center"
+          loading="eager"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-black/35" />
       </div>
 
-      <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,190,70,0.16),transparent_28%),radial-gradient(circle_at_80%_30%,rgba(255,150,0,0.13),transparent_28%),linear-gradient(to_bottom,rgba(0,0,0,.18),rgba(18,7,2,.25),rgba(0,0,0,.42))]" />
+      {/* Light animated gradient - cheap animation */}
+      <div className="gpu-safe absolute inset-0 z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,190,70,0.16),transparent_26%),radial-gradient(circle_at_80%_30%,rgba(255,150,0,0.13),transparent_28%),linear-gradient(to_bottom,rgba(0,0,0,.18),rgba(18,7,2,.22),rgba(0,0,0,.40))] motion-safe:animate-[softFloat_9s_ease-in-out_infinite]" />
 
-      <div className="pointer-events-none absolute left-1/2 top-[48%] z-10 hidden h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#f5c363]/10 lg:block" />
-      <div className="pointer-events-none absolute left-1/2 top-[48%] z-10 hidden h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#f5c363]/15 lg:block" />
-      <div className="pointer-events-none absolute left-1/2 top-[48%] z-10 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f5c363]/15 blur-[90px] sm:h-[420px] sm:w-[420px]" />
+      {/* Mobile/tablet safe glow layers */}
+      <div className="gpu-safe absolute left-[-90px] top-[18%] z-10 h-56 w-56 rounded-full bg-[#f5c363]/20 blur-[80px] motion-safe:animate-[softFloat_7s_ease-in-out_infinite] sm:h-72 sm:w-72" />
+      <div className="gpu-safe absolute bottom-[12%] right-[-110px] z-10 h-60 w-60 rounded-full bg-[#c98218]/20 blur-[90px] motion-safe:animate-[softFloat_8s_ease-in-out_infinite] sm:h-80 sm:w-80" />
 
-      <div className="pointer-events-none absolute z-10 -left-40 top-[20%] hidden h-28 w-[130%] rotate-[-12deg] bg-gradient-to-r from-transparent via-[#f5c363]/10 to-transparent blur-2xl lg:block" />
-      <div className="pointer-events-none absolute z-10 -right-40 bottom-[20%] hidden h-28 w-[130%] rotate-[12deg] bg-gradient-to-r from-transparent via-[#c98218]/10 to-transparent blur-2xl lg:block" />
+      {/* Desktop-only premium particles/lines */}
+      <div className="desktop-heavy absolute inset-0 z-10 overflow-hidden opacity-80">
+        {desktopLines.map((_, i) => (
+          <span
+            key={`line-${i}`}
+            className="gpu-safe absolute h-[2px] w-44 rotate-[-35deg] rounded-full bg-gradient-to-r from-transparent via-[#f5c363] to-transparent"
+            style={{
+              left: `${(i * 13) % 100}%`,
+              top: `${(i * 19) % 100}%`,
+              opacity: 0.22,
+              animation: `softFloat ${4 + (i % 4)}s ease-in-out infinite`,
+              animationDelay: `${i * 0.15}s`,
+            }}
+          />
+        ))}
+
+        {desktopParticles.map((_, i) => (
+          <span
+            key={`particle-${i}`}
+            className="gpu-safe absolute rounded-full bg-[#f5c363] shadow-[0_0_16px_#f5c363]"
+            style={{
+              left: `${(i * 37) % 100}%`,
+              top: `${(i * 23) % 100}%`,
+              width: `${(i % 3) + 2}px`,
+              height: `${(i % 3) + 2}px`,
+              opacity: 0.2,
+              animation: `softFloat ${3 + (i % 5)}s ease-in-out infinite`,
+              animationDelay: `${i * 0.08}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Desktop-only center orbit */}
+      <div className="desktop-heavy">
+        <div className="gpu-safe absolute left-1/2 top-[48%] z-10 h-[760px] w-[760px] rounded-full border border-[#f5c363]/10 motion-safe:animate-[slowSpin_90s_linear_infinite]" />
+        <div className="gpu-safe absolute left-1/2 top-[48%] z-10 h-[560px] w-[560px] rounded-full border border-[#f5c363]/15 motion-safe:animate-[slowSpin_60s_linear_infinite_reverse]" />
+        <div className="gpu-safe absolute left-1/2 top-[48%] z-10 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f5c363]/16 blur-[110px] motion-safe:animate-[softFloat_6s_ease-in-out_infinite]" />
+
+        {orbitDots.map((_, i) => (
+          <div
+            key={`orbit-${i}`}
+            className="gpu-safe absolute left-1/2 top-[48%] z-10 h-2.5 w-2.5 rounded-full bg-[#f5c363] shadow-[0_0_20px_#f5c363]"
+            style={{
+              transform: `rotate(${i * 30}deg) translateX(${280 + (i % 3) * 36}px)`,
+              transformOrigin: "0 0",
+              opacity: 0.55,
+              animation: `softFloat ${5 + (i % 4)}s ease-in-out infinite`,
+            }}
+          />
+        ))}
+      </div>
 
       {cards.map((text, i) => (
         <div
           key={text}
-          className="absolute z-30 hidden rounded-3xl border border-[#f5c363]/25 bg-black/35 px-6 py-4 text-sm font-black text-[#f5c363] shadow-[0_0_24px_rgba(245,195,99,.18)] backdrop-blur-sm lg:block"
+          className="desktop-heavy gpu-safe absolute z-30 rounded-3xl border border-[#f5c363]/30 bg-black/35 px-6 py-4 text-sm font-black text-[#f5c363] shadow-[0_0_32px_rgba(245,195,99,.20)] backdrop-blur-xl"
           style={{
-            left: i === 0 ? "8%" : i === 1 ? "72%" : i === 2 ? "10%" : "76%",
-            top: i === 0 ? "22%" : i === 1 ? "20%" : i === 2 ? "60%" : "62%",
+            left:
+              i === 0
+                ? "8%"
+                : i === 1
+                ? "72%"
+                : i === 2
+                ? "10%"
+                : i === 3
+                ? "76%"
+                : i === 4
+                ? "18%"
+                : "68%",
+            top:
+              i === 0
+                ? "22%"
+                : i === 1
+                ? "20%"
+                : i === 2
+                ? "60%"
+                : i === 3
+                ? "62%"
+                : i === 4
+                ? "78%"
+                : "78%",
+            animation: `cardFloat ${5 + i}s ease-in-out infinite`,
+            animationDelay: `${i * 0.2}s`,
           }}
         >
           {text}
@@ -278,15 +411,17 @@ function Hero() {
       ))}
 
       <div className="absolute left-0 top-0 z-20 h-1 w-full bg-gradient-to-r from-transparent via-[#f5c363] to-transparent opacity-50" />
+      <div className="absolute left-0 top-0 z-20 hidden h-full w-1 bg-gradient-to-b from-transparent via-[#f5c363] to-transparent opacity-35 sm:block" />
+      <div className="absolute right-0 top-0 z-20 hidden h-full w-1 bg-gradient-to-b from-transparent via-[#f5c363] to-transparent opacity-35 sm:block" />
 
-      <div className="relative z-50 flex min-h-[86vh] flex-col items-center justify-center px-4 py-20 text-center sm:min-h-screen sm:px-6">
-        <div className="mb-6 rounded-full border border-[#f5c363]/40 bg-black/40 px-5 py-3 text-[10px] font-black tracking-[0.28em] text-[#f5c363] shadow-[0_0_24px_rgba(245,195,99,0.2)] backdrop-blur-sm sm:px-7 sm:text-xs sm:tracking-[0.4em]">
+      <div className="relative z-50 flex min-h-[100svh] flex-col items-center justify-center px-4 py-24 text-center sm:px-6">
+        <div className="gpu-safe mb-6 rounded-full border border-[#f5c363]/40 bg-black/40 px-5 py-3 text-[10px] font-black tracking-[0.28em] text-[#f5c363] shadow-[0_0_28px_rgba(245,195,99,0.22)] backdrop-blur-xl motion-safe:animate-[softFloat_5s_ease-in-out_infinite] sm:px-7 sm:text-xs sm:tracking-[0.4em]">
           PREMIUM TECH WORLD
         </div>
 
         <div className="relative max-w-[950px]">
           <h1
-            className="text-[38px] leading-[1] sm:text-[58px] lg:text-[84px]"
+            className="text-[38px] leading-[1.05] sm:text-[58px] lg:text-[84px]"
             style={{
               fontFamily: "'Playfair Display', serif",
               fontWeight: "800",
@@ -308,22 +443,23 @@ function Hero() {
             repair services, and reliable tech support.
           </p>
 
-          <div className="mx-auto mt-5 h-[3px] w-[70%] overflow-hidden rounded-full bg-[#f5c363]/10">
-            <div className="h-full w-24 bg-gradient-to-r from-transparent via-[#f5c363] to-transparent" />
+          <div className="mx-auto mt-6 h-[3px] w-[72%] overflow-hidden rounded-full bg-[#f5c363]/10">
+            <div className="h-full w-24 bg-gradient-to-r from-transparent via-[#f5c363] to-transparent motion-safe:animate-[shimmerMove_2.6s_ease-in-out_infinite]" />
           </div>
         </div>
 
-        <div className="relative z-50 mt-9 flex w-full max-w-sm flex-col gap-4 sm:w-auto sm:max-w-none sm:flex-row sm:gap-5">
+        <div className="relative z-50 mt-9 flex w-full max-w-[420px] flex-col gap-4 sm:w-auto sm:max-w-none sm:flex-row sm:gap-5">
           <Link
             to="/products"
-            className="rounded-2xl bg-[#f5c363] px-10 py-4 font-black text-black shadow-[0_0_28px_rgba(245,195,99,0.35)] transition-transform duration-300 hover:scale-105"
+            className="group relative overflow-hidden rounded-2xl bg-[#f5c363] px-10 py-4 font-black text-black shadow-[0_0_30px_rgba(245,195,99,0.38)] transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.03]"
           >
-            Shop Now
+            <span className="absolute inset-0 -translate-x-full bg-white/70 transition-transform duration-700 group-hover:translate-x-full" />
+            <span className="relative">Shop Now</span>
           </Link>
 
           <Link
             to="/services"
-            className="rounded-2xl border border-[#f5c363] bg-black/30 px-10 py-4 font-black text-[#f5c363] backdrop-blur-sm transition-colors duration-300 hover:bg-[#f5c363] hover:text-black"
+            className="rounded-2xl border border-[#f5c363] bg-black/30 px-10 py-4 font-black text-[#f5c363] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:bg-[#f5c363] hover:text-black"
           >
             Services
           </Link>
@@ -341,7 +477,7 @@ function CategoryStrip() {
       <div className="absolute bottom-[-120px] right-[-120px] h-96 w-96 rounded-full bg-[#c98218]/20 blur-[140px]" />
 
       <div
-        className="relative mx-auto grid w-full max-w-[1400px] gap-5 rounded-[32px] border border-[#ead8bc]/40 bg-white/90 p-4 shadow-[0_40px_120px_rgba(0,0,0,.18)] backdrop-blur-sm sm:rounded-[40px] sm:p-6 md:p-8 xl:p-10"
+        className="relative mx-auto grid w-full max-w-[1400px] gap-5 rounded-[32px] border border-[#ead8bc]/40 bg-white/90 p-4 shadow-[0_40px_120px_rgba(0,0,0,.18)] backdrop-blur-2xl sm:rounded-[40px] sm:p-6 md:p-8 xl:p-10"
         style={{
           gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
         }}
@@ -350,16 +486,16 @@ function CategoryStrip() {
           <Link
             key={cat.name}
             to={cat.link}
-            className="group relative min-h-[230px] overflow-hidden rounded-[28px] border border-[#dba13a]/15 bg-gradient-to-b from-[#fffdf8] to-[#f7ead4] p-5 transition-all duration-300 hover:-translate-y-2 hover:border-[#c98218]/40 hover:shadow-[0_30px_80px_rgba(201,130,24,.18)] sm:min-h-[250px] sm:p-6 lg:rounded-[36px] lg:p-7"
+            className="group relative min-h-[230px] overflow-hidden rounded-[28px] border border-[#dba13a]/15 bg-gradient-to-b from-[#fffdf8] to-[#f7ead4] p-5 transition-all duration-700 hover:-translate-y-3 hover:border-[#c98218]/40 hover:shadow-[0_30px_80px_rgba(201,130,24,.18)] sm:min-h-[250px] sm:p-6 lg:rounded-[36px] lg:p-7"
           >
-            <div className="absolute left-1/2 top-0 h-[120px] w-[120px] -translate-x-1/2 rounded-full bg-[#dba13a]/10 blur-[70px] opacity-0 transition duration-300 group-hover:opacity-100" />
+            <div className="absolute left-1/2 top-0 h-[120px] w-[120px] -translate-x-1/2 rounded-full bg-[#dba13a]/10 blur-[70px] opacity-0 transition duration-700 group-hover:opacity-100" />
 
-            <span className="absolute right-4 top-2 text-[58px] font-black leading-none text-[#c98218]/10 transition duration-300 group-hover:text-[#c98218]/20 sm:text-[70px] lg:text-[80px]">
+            <span className="absolute right-4 top-2 text-[58px] font-black leading-none text-[#c98218]/10 transition duration-700 group-hover:text-[#c98218]/20 sm:text-[70px] lg:text-[80px]">
               0{index + 1}
             </span>
 
             <div
-              className="relative mx-auto flex items-center justify-center rounded-full bg-gradient-to-br from-[#fffdf7] to-[#ebc98e] shadow-[0_20px_45px_rgba(201,130,24,.18)] transition duration-300 group-hover:scale-105"
+              className="relative mx-auto flex items-center justify-center rounded-full bg-gradient-to-br from-[#fffdf7] to-[#ebc98e] shadow-[0_20px_45px_rgba(201,130,24,.18)] transition duration-700 group-hover:scale-105"
               style={{
                 width: "clamp(82px, 9vw, 110px)",
                 height: "clamp(82px, 9vw, 110px)",
@@ -370,7 +506,7 @@ function CategoryStrip() {
               <img
                 src={cat.image}
                 alt={cat.name}
-                className="relative z-10 rounded-full object-cover transition duration-300 group-hover:scale-105"
+                className="relative z-10 rounded-full object-cover transition duration-700 group-hover:scale-110"
                 style={{
                   width: "clamp(58px, 7vw, 78px)",
                   height: "clamp(58px, 7vw, 78px)",
@@ -379,7 +515,7 @@ function CategoryStrip() {
             </div>
 
             <h3
-              className="relative mt-6 text-center font-serif font-bold text-[#3b2610] transition duration-300 group-hover:text-[#b56b17]"
+              className="relative mt-6 text-center font-serif font-bold text-[#3b2610] transition duration-700 group-hover:text-[#b56b17]"
               style={{
                 fontSize: "clamp(15px, 1.3vw, 18px)",
               }}
@@ -387,7 +523,7 @@ function CategoryStrip() {
               {cat.name}
             </h3>
 
-            <div className="mx-auto mt-4 h-[2px] w-0 rounded-full bg-[#c98218] transition-all duration-300 group-hover:w-20" />
+            <div className="mx-auto mt-4 h-[2px] w-0 rounded-full bg-[#c98218] transition-all duration-700 group-hover:w-20" />
           </Link>
         ))}
       </div>
@@ -422,8 +558,23 @@ function PrebuildPCSection() {
 
   return (
     <section className="relative overflow-hidden bg-[#fffaf3] px-4 py-14 sm:px-6 lg:px-10">
-      <div className="absolute left-[-100px] top-20 h-80 w-80 rounded-full bg-[#dba13a]/20 blur-[120px] " />
-      <div className="absolute right-[-120px] bottom-10 h-96 w-96 rounded-full bg-[#c98218]/15 blur-[130px] " />
+      <div className="absolute left-[-100px] top-20 h-80 w-80 rounded-full bg-[#dba13a]/20 blur-[120px] animate-pulse" />
+      <div className="absolute right-[-120px] bottom-10 h-96 w-96 rounded-full bg-[#c98218]/15 blur-[130px] animate-[spin_40s_linear_infinite]" />
+
+      {[...Array(14)].map((_, i) => (
+        <span
+          key={i}
+          className="absolute rounded-full bg-[#c78925] shadow-[0_0_18px_rgba(199,137,37,0.8)] animate-ping"
+          style={{
+            left: `${(i * 29) % 100}%`,
+            top: `${(i * 43) % 100}%`,
+            width: `${(i % 4) + 2}px`,
+            height: `${(i % 4) + 2}px`,
+            opacity: 0.18,
+            animationDuration: `${2 + (i % 5)}s`,
+          }}
+        />
+      ))}
 
       <div className="mx-auto max-w-[1380px]">
         <div className="mb-8 flex items-center gap-5">
@@ -435,12 +586,44 @@ function PrebuildPCSection() {
         </div>
 
         <div
-          className={`group relative overflow-hidden rounded-[42px] bg-gradient-to-r ${bgColors[current]} p-8 shadow-[0_35px_100px_rgba(0,0,0,0.35)] transition-all duration-500 hover:scale-[1.01]`}
+          className={`group relative overflow-hidden rounded-[42px] bg-gradient-to-r ${bgColors[current]} p-8 shadow-[0_35px_100px_rgba(0,0,0,0.35)] transition-all duration-1000 hover:scale-[1.01]`}
         >
-          <div className="absolute inset-0 opacity-[0.13] bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-[size:60px_60px] " />
+          <div className="absolute inset-0 opacity-[0.13] bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-[size:60px_60px] animate-pulse" />
 
-          <div className="absolute right-[-120px] top-[-120px] h-[330px] w-[330px]  rounded-full bg-white/25 blur-[100px]" />
-          <div className="absolute left-[-120px] bottom-[-120px] h-[300px] w-[300px]  rounded-full bg-white/15 blur-[90px]" />
+          <div className="absolute right-[-120px] top-[-120px] h-[330px] w-[330px] animate-pulse rounded-full bg-white/25 blur-[100px]" />
+          <div className="absolute left-[-120px] bottom-[-120px] h-[300px] w-[300px] animate-[spin_35s_linear_infinite] rounded-full bg-white/15 blur-[90px]" />
+
+          {/* moving light streaks */}
+          {[...Array(12)].map((_, i) => (
+            <span
+              key={`line-${i}`}
+              className="absolute h-[2px] w-32 rounded-full bg-gradient-to-r from-transparent via-white/70 to-transparent animate-pulse"
+              style={{
+                left: `${(i * 17) % 100}%`,
+                top: `${(i * 23) % 100}%`,
+                transform: `rotate(${i * 22}deg)`,
+                opacity: 0.35,
+                animationDuration: `${2 + (i % 4)}s`,
+              }}
+            />
+          ))}
+
+          {/* floating dots inside card */}
+          {[...Array(10)].map((_, i) => (
+            <span
+              key={`dot-${i}`}
+              className="absolute rounded-full bg-white shadow-[0_0_18px_rgba(255,255,255,0.9)] animate-bounce"
+              style={{
+                left: `${(i * 31) % 100}%`,
+                top: `${(i * 47) % 100}%`,
+                width: `${(i % 4) + 2}px`,
+                height: `${(i % 4) + 2}px`,
+                opacity: 0.25,
+                animationDuration: `${3 + (i % 6)}s`,
+                animationDelay: `${i * 0.08}s`,
+              }}
+            />
+          ))}
 
           <div className="absolute left-8 top-6 z-20 flex flex-wrap gap-3">
             {["gaming", "editing", "studies", "office"].map((item) => (
@@ -450,10 +633,10 @@ function PrebuildPCSection() {
                   const index = prebuildPCs.findIndex((pc) => pc.use === item);
                   if (index !== -1) setCurrent(index);
                 }}
-                className={`rounded-full px-5 py-2 text-xs font-black uppercase tracking-wider transition-all duration-500 hover:-translate-y-1 hover:scale-105 ${
+                className={`rounded-full px-5 py-2 text-xs font-black uppercase tracking-wider transition-all duration-500 hover:-translate-y-1 hover:scale-110 ${
                   prebuildPCs[current].use === item
                     ? "bg-white text-black shadow-xl"
-                    : "bg-white/20 text-white backdrop-blur-sm hover:bg-white/35"
+                    : "bg-white/20 text-white backdrop-blur-xl hover:bg-white/35"
                 }`}
               >
                 {item}
@@ -463,7 +646,7 @@ function PrebuildPCSection() {
 
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/25 text-3xl text-white backdrop-blur-sm transition-all duration-500 hover:scale-105 hover:bg-black/45"
+            className="absolute left-4 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/25 text-3xl text-white backdrop-blur-xl transition-all duration-500 hover:scale-125 hover:bg-black/45"
           >
             ‹
           </button>
@@ -473,35 +656,35 @@ function PrebuildPCSection() {
             className="relative z-10 flex min-h-[420px] flex-col items-center justify-between gap-8 pt-16 lg:flex-row"
           >
             <div className="w-full text-center lg:w-[45%] lg:pl-16 lg:text-left">
-              <p className="text-lg font-semibold text-white/75 ">
+              <p className="text-lg font-semibold text-white/75 animate-pulse">
                 Just {prebuildPCs[current].price}
               </p>
 
-              <h3 className="mt-3 text-5xl font-black text-white drop-shadow-[0_0_25px_rgba(0,0,0,0.45)] sm:text-6xl transition-all duration-300 group-hover:translate-x-2">
+              <h3 className="mt-3 text-5xl font-black text-white drop-shadow-[0_0_25px_rgba(0,0,0,0.45)] sm:text-6xl transition-all duration-700 group-hover:translate-x-2">
                 {prebuildPCs[current].title}
               </h3>
 
-              <p className="mt-5 max-w-[420px] text-white/75 transition-all duration-300 group-hover:translate-x-2">
+              <p className="mt-5 max-w-[420px] text-white/75 transition-all duration-700 group-hover:translate-x-2">
                 High performance setup crafted for {prebuildPCs[current].use}.
               </p>
             </div>
 
             <div className="relative flex w-full justify-center lg:w-[55%]">
-              <div className="absolute inset-0 m-auto h-[300px] w-[300px]  rounded-full bg-white/25 blur-[85px]" />
-              <div className="absolute inset-0 m-auto h-[360px] w-[360px] rounded-full border border-white/25 " />
-              <div className="absolute inset-0 m-auto h-[440px] w-[440px] rounded-full border border-white/15 " />
+              <div className="absolute inset-0 m-auto h-[300px] w-[300px] animate-pulse rounded-full bg-white/25 blur-[85px]" />
+              <div className="absolute inset-0 m-auto h-[360px] w-[360px] rounded-full border border-white/25 animate-[spin_22s_linear_infinite]" />
+              <div className="absolute inset-0 m-auto h-[440px] w-[440px] rounded-full border border-white/15 animate-[spin_35s_linear_infinite_reverse]" />
 
               <img
                 src={prebuildPCs[current].image}
                 alt={prebuildPCs[current].title}
-                className="relative h-[280px] w-full max-w-[500px] rounded-[32px] object-cover shadow-[0_30px_80px_rgba(0,0,0,0.35)] transition-all duration-300 group-hover:-translate-y-2 group-hover:scale-105 sm:h-[340px]"
+                className="relative h-[280px] w-full max-w-[500px] rounded-[32px] object-cover shadow-[0_30px_80px_rgba(0,0,0,0.35)] transition-all duration-700 group-hover:-translate-y-5 group-hover:scale-110 sm:h-[340px]"
               />
             </div>
           </Link>
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/25 text-3xl text-white backdrop-blur-sm transition-all duration-500 hover:scale-105 hover:bg-black/45"
+            className="absolute right-4 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/25 text-3xl text-white backdrop-blur-xl transition-all duration-500 hover:scale-125 hover:bg-black/45"
           >
             ›
           </button>
@@ -563,22 +746,22 @@ function FeaturedProducts({ onAddToCart }) {
           {products.map((p, index) => (
             <article
               key={p.id}
-              className="group relative overflow-hidden rounded-[32px] border border-[#e3ccb0] bg-white p-4 shadow-[0_12px_35px_rgba(90,50,15,.08)] transition duration-300 hover:-translate-y-2 hover:border-[#c59354]/60 hover:shadow-[0_30px_80px_rgba(90,50,15,.18)]"
+              className="group relative overflow-hidden rounded-[32px] border border-[#e3ccb0] bg-white p-4 shadow-[0_12px_35px_rgba(90,50,15,.08)] transition duration-700 hover:-translate-y-4 hover:border-[#c59354]/60 hover:shadow-[0_30px_80px_rgba(90,50,15,.18)]"
               style={{ animationDelay: `${index * 0.12}s` }}
             >
-              <div className="absolute left-0 top-0 h-full w-full bg-[radial-gradient(circle_at_50%_0%,rgba(219,161,58,.14),transparent_35%)] opacity-0 transition duration-300 group-hover:opacity-100" />
+              <div className="absolute left-0 top-0 h-full w-full bg-[radial-gradient(circle_at_50%_0%,rgba(219,161,58,.14),transparent_35%)] opacity-0 transition duration-700 group-hover:opacity-100" />
 
-              <span className="absolute right-5 top-4 z-10 text-5xl font-black text-[#c78925]/10 transition duration-300 group-hover:scale-105 group-hover:text-[#c78925]/20">
+              <span className="absolute right-5 top-4 z-10 text-5xl font-black text-[#c78925]/10 transition duration-700 group-hover:scale-110 group-hover:text-[#c78925]/20">
                 0{index + 1}
               </span>
 
-              <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-[#ffe2aa]/60 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+              <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-[#ffe2aa]/60 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
 
               <div className="relative overflow-hidden rounded-[24px] bg-[#fff6e8]">
                 <img
                   src={p.image}
                   alt={p.name}
-                  className="h-[210px] w-full object-cover transition duration-300 group-hover:scale-105"
+                  className="h-[210px] w-full object-cover transition duration-700 group-hover:scale-110"
                 />
 
               
@@ -601,7 +784,7 @@ function FeaturedProducts({ onAddToCart }) {
 
                 <button
                   onClick={() => onAddToCart(p)}
-                  className="mt-5 flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl border border-[#c59354]/60 bg-white py-3 text-xs font-black uppercase tracking-[2px] text-[#8f5c22] transition duration-300 hover:-translate-y-1 hover:bg-[#c59354] hover:text-white hover:shadow-[0_18px_45px_rgba(201,130,24,.25)]"
+                  className="mt-5 flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl border border-[#c59354]/60 bg-white py-3 text-xs font-black uppercase tracking-[2px] text-[#8f5c22] transition duration-700 hover:-translate-y-1 hover:bg-[#c59354] hover:text-white hover:shadow-[0_18px_45px_rgba(201,130,24,.25)]"
                 >
                   Add To Cart
                   <Icon name="cart" size={15} />
@@ -631,7 +814,7 @@ function ServicesSection() {
 
           <Link
             to="/services"
-            className="rounded-2xl border border-[#c79031] px-8 py-4 text-sm font-black text-[#ddb15b] transition-all duration-300 hover:-translate-y-2 hover:scale-105 hover:bg-[#ddb15b] hover:text-[#120a04]"
+            className="rounded-2xl border border-[#c79031] px-8 py-4 text-sm font-black text-[#ddb15b] transition-all duration-700 hover:-translate-y-2 hover:scale-105 hover:bg-[#ddb15b] hover:text-[#120a04]"
           >
             View All Services
           </Link>
@@ -641,12 +824,12 @@ function ServicesSection() {
           {services.map((service, index) => (
             <article
               key={service.title}
-              className="group relative min-h-[260px] overflow-hidden rounded-[32px] border border-[#9b681f]/80 bg-gradient-to-br from-[#2a1909] to-[#100a05] p-6 transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03] hover:shadow-[0_30px_80px_rgba(0,0,0,0.45)]"
+              className="group relative min-h-[260px] overflow-hidden rounded-[32px] border border-[#9b681f]/80 bg-gradient-to-br from-[#2a1909] to-[#100a05] p-6 transition-all duration-700 hover:-translate-y-5 hover:scale-[1.03] hover:shadow-[0_30px_80px_rgba(0,0,0,0.45)]"
             >
               <img
                 src={service.image}
                 alt={service.title}
-                className="absolute right-4 top-4 h-[90px] w-[90px] object-contain opacity-30 transition-all duration-300 group-hover:scale-105 group-hover:rotate-12 group-hover:opacity-100"
+                className="absolute right-4 top-4 h-[90px] w-[90px] object-contain opacity-30 transition-all duration-700 group-hover:scale-125 group-hover:rotate-12 group-hover:opacity-100"
               />
 
               <span className="text-6xl font-black text-[#dba13a]/10">
@@ -663,7 +846,7 @@ function ServicesSection() {
 
               <Link
                 to="/services"
-                className="relative mt-6 inline-flex rounded-xl border border-[#c89031] px-7 py-3 text-xs font-black uppercase text-[#d9a744] transition-all duration-300 hover:scale-105 hover:bg-[#c89031] hover:text-black"
+                className="relative mt-6 inline-flex rounded-xl border border-[#c89031] px-7 py-3 text-xs font-black uppercase text-[#d9a744] transition-all duration-700 hover:scale-105 hover:bg-[#c89031] hover:text-black"
               >
                 Enquire Now
               </Link>
@@ -685,19 +868,19 @@ function TrustStrip() {
         {trust.map((item, index) => (
           <div
             key={item.title}
-            className="group relative flex items-center gap-5 overflow-hidden rounded-2xl p-4 transition-all duration-300 hover:-translate-y-2 hover:scale-105 hover:bg-[#fff0d4] hover:shadow-[0_20px_45px_rgba(201,130,24,0.18)] lg:border-r lg:border-[#dbc49d] lg:last:border-r-0"
+            className="group relative flex items-center gap-5 overflow-hidden rounded-2xl p-4 transition-all duration-700 hover:-translate-y-3 hover:scale-105 hover:bg-[#fff0d4] hover:shadow-[0_20px_45px_rgba(201,130,24,0.18)] lg:border-r lg:border-[#dbc49d] lg:last:border-r-0"
             style={{ animationDelay: `${index * 0.12}s` }}
           >
-            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/70 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/70 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
 
-            <div className="relative grid h-[72px] w-[72px] shrink-0 place-items-center rounded-2xl bg-[#fff6e8] shadow-[0_12px_30px_rgba(201,130,24,0.12)] transition duration-300 group-hover:shadow-[0_18px_45px_rgba(201,130,24,0.22)]">
+            <div className="relative grid h-[72px] w-[72px] shrink-0 place-items-center rounded-2xl bg-[#fff6e8] shadow-[0_12px_30px_rgba(201,130,24,0.12)] transition duration-700 group-hover:shadow-[0_18px_45px_rgba(201,130,24,0.22)]">
               <span className="absolute inset-[-7px] rounded-[22px] border border-[#c98218]/20" />
               <span className="absolute inset-[-13px] rounded-[26px] border border-[#c98218]/10" />
 
               <img
                 src={item.image}
                 alt={item.title}
-                className="relative h-[56px] w-[56px] object-contain transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_25px_rgba(201,130,24,0.45)]"
+                className="relative h-[56px] w-[56px] object-contain transition-all duration-700 group-hover:scale-125 group-hover:drop-shadow-[0_0_25px_rgba(201,130,24,0.45)]"
               />
             </div>
 
@@ -711,7 +894,7 @@ function TrustStrip() {
               </p>
             </div>
 
-            <span className="absolute right-3 top-3 text-[#c98218]/20 transition-all duration-300 group-hover:scale-150">
+            <span className="absolute right-3 top-3 text-[#c98218]/20 transition-all duration-700 group-hover:scale-150">
               ✦
             </span>
           </div>
