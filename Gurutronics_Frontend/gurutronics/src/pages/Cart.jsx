@@ -236,7 +236,7 @@ export default function Cart() {
         toEmail: "kaviyarasi1603@gmail.com",
       };
 
-      const res = await fetch("http://localhost:5000/api/send-order-mail", {
+      const res = await fetch("https://gurutronics-backend.vercel.app/api/send-order-mail", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -114,7 +114,7 @@ const getCartCount = () => {
   return cart.reduce((total, item) => total + item.qty, 0);
 };
 
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "https://gurutronics-backend.vercel.app/api";
 
 const formatProductFromApi = (item) => ({
   id: item.id,
@@ -432,7 +432,7 @@ function PrebuildPCSection() {
   ];
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/prebuilds")
+    fetch("https://gurutronics-backend.vercel.app/api/prebuilds")
       .then((res) => res.json())
       .then((data) => setPrebuildPCs(data))
       .catch((err) => console.error("Prebuild fetch error:", err));
